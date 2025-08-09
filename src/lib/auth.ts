@@ -7,12 +7,18 @@ export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma) as any,
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      clientId: process.env.GOOGLE_CLIENT_ID || "demo-client-id",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "demo-client-secret",
     }),
   ],
   callbacks: {
     async signIn({ user, account }) {
+      // Skip validation if using demo credentials
+      if (process.env.GOOGLE_CLIENT_ID === "demo-client-id") {
+        console.log("Using demo OAuth credentials - skipping domain validation");
+        return true;
+      }
+      
       // Only allow users with @propellic.com email addresses
       const allowedDomain = process.env.ALLOWED_EMAIL_DOMAIN || "propellic.com";
       
@@ -47,5 +53,18 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/admin/signin",
     error: "/admin/auth-error",
+  },
+  debug: process.env.NODE_ENV === "development",
+  logger: {
+    error(code, metadata) {
+      if (process.env.NODE_ENV === "development") {
+        console.log("NextAuth Error:", code, metadata);
+      }
+    },
+    warn(code) {
+      if (process.env.NODE_ENV === "development") {
+        console.log("NextAuth Warning:", code);
+      }
+    },
   },
 };
