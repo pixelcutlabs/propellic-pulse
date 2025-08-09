@@ -1,10 +1,10 @@
-import { NextAuthOptions } from "next-auth";
+import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "./db";
 
-export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma) as any,
+export const { handlers, signIn, signOut, auth } = NextAuth({
+  adapter: PrismaAdapter(prisma),
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID || "demo-client-id",
@@ -12,7 +12,7 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async signIn({ user, account }) {
+    async signIn({ user }) {
       // Skip validation if using demo credentials
       if (process.env.GOOGLE_CLIENT_ID === "demo-client-id") {
         console.log("Using demo OAuth credentials - skipping validation");
@@ -40,9 +40,9 @@ export const authOptions: NextAuthOptions = {
     async session({ token, session }) {
       if (token) {
         session.user.id = token.id as string;
-        session.user.name = token.name;
-        session.user.email = token.email;
-        session.user.image = token.picture;
+        session.user.name = token.name as string;
+        session.user.email = token.email as string;
+        session.user.image = token.picture as string;
       }
       
       return session;
@@ -63,16 +63,4 @@ export const authOptions: NextAuthOptions = {
     error: "/admin/auth-error",
   },
   debug: process.env.NODE_ENV === "development",
-  logger: {
-    error(code, metadata) {
-      if (process.env.NODE_ENV === "development") {
-        console.log("NextAuth Error:", code, metadata);
-      }
-    },
-    warn(code) {
-      if (process.env.NODE_ENV === "development") {
-        console.log("NextAuth Warning:", code);
-      }
-    },
-  },
-};
+});

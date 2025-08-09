@@ -10,6 +10,7 @@ import {
   Title,
   Tooltip,
   Legend,
+  TooltipItem,
 } from 'chart.js';
 import { brand } from '@/lib/brand';
 
@@ -73,8 +74,8 @@ export default function EnpsTrendChart({ data, className = '' }: EnpsTrendChartP
       },
       tooltip: {
         callbacks: {
-          afterLabel: function(context: any) {
-            const dataPoint = data[context.dataIndex];
+          afterLabel: function(tooltipItem: TooltipItem<'line'>) {
+            const dataPoint = data[tooltipItem.dataIndex];
             return `Responses: ${dataPoint.responseCount}`;
           },
         },
@@ -90,7 +91,7 @@ export default function EnpsTrendChart({ data, className = '' }: EnpsTrendChartP
         },
         ticks: {
           color: brand.text,
-          callback: function(value: any) {
+          callback: function(value: number | string) {
             return value + '';
           },
         },

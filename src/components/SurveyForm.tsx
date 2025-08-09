@@ -137,8 +137,7 @@ export default function SurveyForm({
             }}
             className="w-full p-4 border rounded-lg resize-vertical min-h-24 focus:ring-2 focus:ring-opacity-50"
             style={{
-              borderColor: brand.secondary + '30',
-              focusRingColor: brand.primary,
+              borderColor: brand.secondary + '30'
             }}
             placeholder="Share your thoughts..."
             rows={3}
@@ -163,7 +162,7 @@ export default function SurveyForm({
               className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-opacity-50"
               style={{
                 borderColor: brand.secondary + '30',
-                focusRingColor: brand.primary,
+
               }}
               placeholder="Your name"
             />
@@ -179,7 +178,7 @@ export default function SurveyForm({
               className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-opacity-50"
               style={{
                 borderColor: brand.secondary + '30',
-                focusRingColor: brand.primary,
+
               }}
             >
               <option value="">Select a department</option>

@@ -136,8 +136,7 @@ export default function AdminDashboard() {
               onChange={(e) => setSelectedCycle(e.target.value)}
               className="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-opacity-50"
               style={{ 
-                borderColor: brand.secondary + '30',
-                focusRingColor: brand.primary 
+                borderColor: brand.secondary + '30'
               }}
             >
               <option value="all">All Time</option>
@@ -172,7 +171,7 @@ export default function AdminDashboard() {
           <div className="bg-white p-6 rounded-2xl shadow-brand">
             <div 
               className="text-2xl font-bold"
-              style={{ color: stats?.summary.enps >= 0 ? brand.success : brand.danger }}
+              style={{ color: (stats?.summary.enps ?? 0) >= 0 ? brand.success : brand.danger }}
             >
               {stats?.summary.enps || 0}
             </div>

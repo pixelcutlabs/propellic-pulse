@@ -9,6 +9,7 @@ import {
   Title,
   Tooltip,
   Legend,
+  TooltipItem,
 } from 'chart.js';
 import { brand } from '@/lib/brand';
 
@@ -74,8 +75,8 @@ export default function DistributionChart({ data, className = '' }: Distribution
       },
       tooltip: {
         callbacks: {
-          afterLabel: function(context: any) {
-            const percentage = total > 0 ? ((context.raw / total) * 100).toFixed(1) : '0';
+          afterLabel: function(tooltipItem: TooltipItem<'bar'>) {
+            const percentage = total > 0 ? (((tooltipItem.raw as number) / total) * 100).toFixed(1) : '0';
             return `${percentage}% of responses`;
           },
         },

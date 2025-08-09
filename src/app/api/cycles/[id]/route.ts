@@ -1,20 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 import { updateCycleSchema } from '@/lib/validations';
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // Check authentication
-    const session = await getServerSession(authOptions);
+    const session = await auth();
     if (!session) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    const { id } = await params;
     const body = await request.json();
     
     // Validate request body
@@ -30,7 +30,7 @@ export async function PATCH(
 
     // Update the cycle
     const updatedCycle = await prisma.cycle.update({
-      where: { id: params.id },
+      where: { id },
       data: updateData,
       include: {
         questions: {
@@ -49,10 +49,10 @@ export async function PATCH(
       cycle: updatedCycle,
     });
 
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Update cycle error:', error);
     
-    if (error.code === 'P2025') {
+    if (error && typeof error === 'object' && 'code' in error && error.code === 'P2025') {
       return NextResponse.json(
         { error: 'Cycle not found' },
         { status: 404 }
