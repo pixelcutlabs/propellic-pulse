@@ -32,7 +32,7 @@ A production-ready web application for collecting anonymous monthly eNPS (Employ
 - **Departments**: Organizational structure for analytics
 
 ### Security & Anonymity
-- Admin access restricted to `@propellic.com` emails
+- Admin access restricted to specific allowlisted email addresses
 - Optional employee identification
 - Submission hash prevents duplicate responses
 - Honeypot spam protection
@@ -87,8 +87,8 @@ NEXTAUTH_SECRET="your-secret-key"
 GOOGLE_CLIENT_ID="your-google-client-id"
 GOOGLE_CLIENT_SECRET="your-google-client-secret"
 
-# Email Domain Restriction
-ALLOWED_EMAIL_DOMAIN="propellic.com"
+# Admin Access (configured in code - see src/lib/auth.ts)
+# Current admins: brennen@propellic.com, paul@propellic.com, amanda@propellic.com
 ```
 
 ## 📊 Usage
@@ -134,11 +134,12 @@ The application follows Propellic brand guidelines:
 3. **Environment Variables**:
    - Configure all required environment variables in Vercel dashboard
    - Ensure `NEXTAUTH_URL` points to your production domain
+   - Admin access is controlled in code (src/lib/auth.ts) - no environment variables needed
 
 ### Production Considerations
 - Use PostgreSQL for production (update schema.prisma)
 - Set up proper Google OAuth credentials
-- Configure domain allowlist for admin access
+- Admin access is configured in code (see src/lib/auth.ts)
 - Enable database connection pooling for scale
 
 ## 📁 Project Structure

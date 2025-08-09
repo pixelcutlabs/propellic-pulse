@@ -15,18 +15,26 @@ export const authOptions: NextAuthOptions = {
     async signIn({ user, account }) {
       // Skip validation if using demo credentials
       if (process.env.GOOGLE_CLIENT_ID === "demo-client-id") {
-        console.log("Using demo OAuth credentials - skipping domain validation");
+        console.log("Using demo OAuth credentials - skipping validation");
         return true;
       }
       
-      // Only allow users with @propellic.com email addresses
-      const allowedDomain = process.env.ALLOWED_EMAIL_DOMAIN || "propellic.com";
+      // Admin allowlist - only these email addresses can access admin features
+      // To add/remove admins, update this list and redeploy
+      const allowedAdmins = [
+        "brennen@propellic.com",
+        "paul@propellic.com", 
+        "amanda@propellic.com"
+      ];
       
-      if (!user.email?.endsWith(`@${allowedDomain}`)) {
-        console.log(`Access denied for ${user.email} - not in allowed domain ${allowedDomain}`);
+      const userEmail = user.email?.toLowerCase();
+      
+      if (!userEmail || !allowedAdmins.includes(userEmail)) {
+        console.log(`Access denied for ${user.email} - not in admin allowlist`);
         return false;
       }
       
+      console.log(`Admin access granted for ${user.email}`);
       return true;
     },
     async session({ token, session }) {
