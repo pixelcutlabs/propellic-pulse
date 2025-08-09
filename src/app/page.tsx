@@ -32,32 +32,7 @@ export default function Home() {
           </div>
         </LayeredArrowGradient>
 
-        {/* Simple Info Section */}
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-2xl font-bold mb-6" style={{ color: brand.text }}>
-            Quick & Anonymous Employee Feedback
-          </h2>
-          <p className="text-lg text-gray-600 mb-8">
-            Help us track employee satisfaction and improve our workplace culture through monthly pulse surveys.
-          </p>
-        </div>
-
-        {/* CTA */}
-        <div className="text-center">
-          <Link
-            href="/survey"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all hover:opacity-90 active:scale-95"
-            style={{ 
-              backgroundColor: brand.primary, 
-              color: brand.bg 
-            }}
-          >
-            Take Survey
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </Link>
-        </div>
+        {/* Removed duplicate info + CTA section */}
       </div>
     </BrandShell>
   );
