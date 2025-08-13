@@ -42,7 +42,6 @@ export async function GET() {
               { name: "Sales" },
               { name: "Engineering" },
             ],
-            skipDuplicates: true,
           });
         }
       });
