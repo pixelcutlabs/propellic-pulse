@@ -5,6 +5,20 @@ import { createDepartmentSchema } from '@/lib/validations';
 
 export async function GET() {
   try {
+    // Bootstrap default departments on first run
+    const count = await prisma.department.count();
+    if (count === 0) {
+      await prisma.department.createMany({
+        data: [
+          { name: 'Operations' },
+          { name: 'Marketing' },
+          { name: 'Sales' },
+          { name: 'Engineering' },
+        ],
+        skipDuplicates: true,
+      });
+    }
+
     const departments = await prisma.department.findMany({
       orderBy: {
         name: 'asc',

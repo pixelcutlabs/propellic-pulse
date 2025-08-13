@@ -5,6 +5,49 @@ import { createCycleSchema } from '@/lib/validations';
 
 export async function GET() {
   try {
+    // If this is a fresh environment, bootstrap a default active cycle and departments
+    const existingCycleCount = await prisma.cycle.count();
+    if (existingCycleCount === 0) {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = now.getMonth() + 1; // 1-12
+
+      const startOfMonth = new Date(Date.UTC(year, month - 1, 1, 0, 0, 0));
+      const endOfMonth = new Date(Date.UTC(year, month, 0, 23, 59, 59));
+
+      await prisma.$transaction(async (tx) => {
+        const created = await tx.cycle.create({
+          data: {
+            year,
+            month,
+            startsAt: startOfMonth,
+            endsAt: endOfMonth,
+            isActive: true,
+          },
+        });
+
+        await tx.question.createMany({
+          data: [
+            { cycleId: created.id, order: 1, text: "What went well for you at Propellic this month?" },
+            { cycleId: created.id, order: 2, text: "What could we improve next month?" },
+          ],
+        });
+
+        const deptCount = await tx.department.count();
+        if (deptCount === 0) {
+          await tx.department.createMany({
+            data: [
+              { name: "Operations" },
+              { name: "Marketing" },
+              { name: "Sales" },
+              { name: "Engineering" },
+            ],
+            skipDuplicates: true,
+          });
+        }
+      });
+    }
+
     const cycles = await prisma.cycle.findMany({
       include: {
         questions: {
